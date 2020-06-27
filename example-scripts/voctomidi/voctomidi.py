@@ -95,9 +95,9 @@ class MidiInputHandler(object):
             return
 
         elif message[0] == NOTE_ON:
-            if message[1] in self.event_map:
-                note = message[1]
-                msg = "set_videos_and_composite " + self.event_map[note]
+            event = self.event_map.get(message[1])
+            if event:
+                msg = "set_videos_and_composite " + event
                 print("Sending: '{}'".format(msg))
                 try:
                     self.conn.sendall(msg.encode('ascii') + b"\n")
