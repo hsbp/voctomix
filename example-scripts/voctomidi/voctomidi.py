@@ -4,6 +4,7 @@ import atexit
 import socket
 import sys
 import time
+from subprocess import Popen
 from rtmidi.midiutil import open_midiport
 
 from lib.config import get_config
@@ -97,6 +98,11 @@ class MidiInputHandler(object):
         elif message[0] == NOTE_ON:
             event = self.event_map.get(message[1])
             if event:
+                if event.startswith('!'):
+                    cmd = event[1:]
+                    print(f"Executing command {cmd!r}")
+                    Popen(cmd, shell=True)
+                    return
                 msg = "set_videos_and_composite " + event
                 print("Sending: '{}'".format(msg))
                 try:
